@@ -1,0 +1,9 @@
+extends ./default.pug
+include ./components/search.pug
+block content
+    .row.gap-3
+        +addsearch()
+        each doa in prayerscollection 
+            button.btn.btn-outline-light(type="button" ke_doa="" onclick="location.assign('/kumpulandoa/"+doa+"')") 
+                h4 #{doa}
+    script(src='/assets/webrelated/doasearch' crossorigin="anonymous" type="text/javascript")

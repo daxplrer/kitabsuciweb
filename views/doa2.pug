@@ -1,0 +1,21 @@
+extends ./default.pug
+append head 
+    
+
+block content
+    .row.d-flex
+        .col-1 
+            button.btn.btn-outline-light(type="button", onclick="location.assign('/kumpulandoa/')")
+                i.bi.bi-arrow-left-circle
+        .col-5
+            h1.ml-3.p-y-2 Kumpulan Doa
+
+    - var imgrepeat = 1;
+    .row.gap-x-1
+        while imgrepeat < 4
+            .col
+                img(src="https://source.unsplash.com/random/200x200?catholic")
+                - imgrepeat++
+    h2 Doa #{namadoa}
+    each kalimat in teksdoa
+        p #{kalimat}

@@ -1,6 +1,7 @@
 // @deno-types="npm:@types/express@4.17.15"
 import express from "npm:express@4.18.2";
 import { isnode } from "npm:@daxplrer/isnode@0.0.6";
+import isbot from "npm:isbot@3.7.0"
 import * as mimetypes from "https://deno.land/x/mimetypes@v1.0.0/mod.ts";
 import * as fs from "https://deno.land/std@0.204.0/fs/mod.ts";
 import * as path from "https://deno.land/std@0.204.0/path/mod.ts";
@@ -27,22 +28,11 @@ export function getName(pathstr:string):string{
 const fileCache: { [key: string]: Uint8Array } = {};
 // deno-lint-ignore no-explicit-any
 const fileCacheMime: { [key: string]: any } = {};
-async function getFile(entrypath: string): Promise<Uint8Array> {
-  const textencode = new TextEncoder()
-  if (typeof fileCache[entrypath] !== "undefined") return fileCache[entrypath];
-  const file = await Deno.readFile(entrypath)
-  const filestr = convertTo(file, 'utf-8')
-  if (path.globToRegExp("**/*.e.js").test(entrypath)) {
-    return textencode.encode(`${await eval(filestr)}`);
-  } else {
-    fileCache[entrypath] = file;
-    return file;
-  }
-}
 export interface namespaceitOption {
   verbose?: boolean;
   ignore?: string[];
   dontConvertTheseFiles?: string[];
+  doNotCacheAllFiles?:boolean
 }
 async function isPathDetectedWithGlob(
   globs: string[] | undefined,
@@ -56,14 +46,35 @@ async function isPathDetectedWithGlob(
   return false;
 }
 export async function namespaceit(
+  alias:string,
   directory: string,
   app: ReturnType<typeof express>,
   fromMeta: ImportMeta,
   opt: namespaceitOption,
 ): Promise<void> {
   let firstboot = true;
+  function ifvalisntundefined(key:keyof namespaceitOption){
+   if (typeof opt==="undefined") return false
+   if (typeof opt[key]==="undefined") return false
+   return true
+  }
+  async function getFile(entrypath: string): Promise<Uint8Array> {
+    const donotcache = (ifvalisntundefined('doNotCacheAllFiles') && opt.doNotCacheAllFiles)
+    const textencode = new TextEncoder()
+    if (!donotcache) {
+      if (typeof fileCache[entrypath] !== "undefined") return fileCache[entrypath];
+    }
+    const file = await Deno.readFile(entrypath)
+    const filestr = convertTo(file, 'utf-8')
+    if (path.globToRegExp("**/*.e.js").test(entrypath)) {
+      return textencode.encode(`${await eval(filestr)}`);
+    } else {
+      if (!donotcache) fileCache[entrypath] = file;
+      return file;
+    }
+  }
   function verboselog(text: string) {
-    if (opt.verbose === true) console.log(text);
+    if (ifvalisntundefined('verbose') && opt.verbose === true) console.log(text);
   }
   const meta = generatePath(fromMeta);
   const pth = meta.dirname;
@@ -89,21 +100,27 @@ export async function namespaceit(
       "/",
       getfilename === "index" ? "" : getName(entry.path),
     );
+    const pathparseddir = path.parse(expresspath).dir
     expresspath =
       await isPathDetectedWithGlob(
           opt.dontConvertTheseFiles,
           normalizePathToPosix(entry.path),
         )
-        ? (path.parse(expresspath).dir+'/'+path.parse(expresspath).name)+getExt(entry.path):expresspath;
-
+        ? ((pathparseddir==='/'?'/':(pathparseddir+'/'))+(path.parse(expresspath).name))+getExt(entry.path):expresspath;
     Object.freeze(expresspath);
     if (entry.isFile) {
       
       verboselog(
-        "Changing " + entryPathBase + " into " + expresspath +
+        "Changing " + entryPathBase + " into " + alias+expresspath +
           " on Express...",
       );
-      app.get(expresspath, async (_req, res) => {
+      app.get(alias+expresspath, async (req, res) => {
+        // timeout if the user is bot
+        if (isbot(req.get('user-agent'))) {
+          res.end()
+          return
+        }
+        
         (()=>{
         if (typeof fileCacheMime[entry.path] === "undefined") {
           fileCacheMime[entry.path] = {};
@@ -114,8 +131,11 @@ export async function namespaceit(
         }
       })()
         const filecachemime = fileCacheMime[entry.path];
+        // @ts-ignore: outdated types
         res.writeHead(200, filecachemime);
+        // @ts-ignore: outdated types
         res.end(await getFile(entry.path));
+        return
       });
     } else if (entry.isDirectory) {
       verboselog(

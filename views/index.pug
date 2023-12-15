@@ -1,0 +1,12 @@
+extends ./default.pug
+block content 
+   h1 Selamat datang di KitabSuci! 
+   hr
+   h2 Kalender Liturgi
+   iframe(reffererpolicy="no-referrer-when-downgrade" height="400" style="width:100%" src="https://www.imankatolik.or.id/kalender.php")
+   a(style="text-decoration:none;" href="https://www.imankatolik.or.id/kalender.php") dari imankatolik.or.id
+   hr
+   h2 Mau liat fitur yang lain? Coba deh klik tombol ini
+   button.btn.btn-white(type="button" onclick="location.assign('/quiz')") Buka Quiz
+   button.btn.btn-white(type="button" onclick="location.assign('/kumpulandoa')") Lihat kumpulan Doa
+

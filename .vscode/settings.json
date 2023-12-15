@@ -4,7 +4,7 @@
     "deno.cacheOnSave": true,
     "[typescript]":{"editor.defaultFormatter": "denoland.vscode-deno"},
     "deno.cache": "./cache",
-    "deno.disablePaths": ["./web/assets"],
+    "deno.disablePaths": ["./views/assets"],
     "editor.formatOnSaveMode": "file",
     "typescript.disableAutomaticTypeAcquisition": true,
     "typescript.tsserver.experimental.enableProjectDiagnostics" : false

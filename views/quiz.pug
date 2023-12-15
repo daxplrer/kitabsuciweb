@@ -1,0 +1,14 @@
+extends ./default.pug
+block content 
+    #quest.justify-content-center
+        h2 #{quizquestion}
+        img.mx-50(src=quizimg)
+
+    #ans.row.py-2
+        each ans in anslist
+            if (ans==realans)
+                button.btn.btn-outline-light.my-2.btn-lg(type="button" ansbtn="" id='correctans') #{ans}
+            else 
+                button.btn.btn-outline-light.my-2.btn-lg(type="button" ansbtn="") #{ans}
+    
+    script(src='/assets/webrelated/quizprocessor' crossorigin="anonymous" type="text/javascript")

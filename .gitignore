@@ -1,2 +1,4 @@
 cache/**/*
-.deno
+.vscode
+deno.lock
+deploy.sh

@@ -1,0 +1,32 @@
+doctype html 
+html 
+    head
+        meta(name="viewport" content="width=device-width, initial-scale=1.0")
+        mixin linkcss(path)
+            link(rel="stylesheet" href=path crossorigin="anonymous", type="text/css")
+        +linkcss('/assets/styles.css')
+        +linkcss('/assets/bootstrap.min.css')
+        +linkcss('/assets/bootstrapstyles.css')
+        +linkcss('https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.2/font/bootstrap-icons.css')
+        script(src="/assets/bootstrap" crossorigin="anonymous" type="module")
+        script(src="/assets/jquery" crossorigin="anonymous" type="text/javascript")
+        block head
+    body(data-bs-theme="dark")
+    header.p-3.bg-dark.text-white
+        .header
+            .d-flex.flex-wrap.align-items-center.justify-content-center.justify-content-lg-start
+            i.bi.bi-book-half(style="font-size: 50px; text-align:center")
+            ul.nav.col-12.col-lg-auto.me-lg-auto.mb-2.justify-content-center.mb-md-0
+                mixin addmenu(path, nm, pagenmid)
+                    li
+                        if (pagenm==pagenmid)
+                            a.nav-link.px-4.text-secondary(href=path) #{nm}
+                        else 
+                            a.nav-link.px-2.text-white(href=path) #{nm}
+
+                +addmenu('/', 'Beranda', 'home')
+                +addmenu('/quiz', 'Quiz', 'quiz')
+                +addmenu('/kumpulandoa', 'Kumpulan Doa', 'prayerscollection')
+#content.container
+    block content
+#footer
