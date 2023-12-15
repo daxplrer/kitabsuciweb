@@ -1,7 +1,7 @@
 // @deno-types="npm:@types/express@4.17.15"
 import express from "npm:express@4.18.2";
+import _pug from "npm:pug@3.0.2"
 import * as fs from 'https://deno.land/std@0.204.0/fs/mod.ts'
-import * as pug from 'https://deno.land/x/pug@v0.1.6/mod.ts'
 import {join} from 'https://deno.land/std@0.204.0/path/mod.ts'
 import generatePath from "./tools/generatePath.ts";
 import convertTo from './tools/convertTo.ts';
