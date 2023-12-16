@@ -35,11 +35,16 @@ export const mainquiz:quiztype = {
     ans:['Taman Getsemani', 'Taman Eden', 'Tanah Kanaan', 'Golgota'],
     correctans: 2
 },
-['Setelah Sakramen Baptis, selanjutnya apa lagi ya?']:{
+['Setelah Sakramen Komuni Pertama, selanjutnya apa lagi ya?']:{
     imgkeyword:'https://blue.kumparan.com/image/upload/fl_progressive,fl_lossy,c_fill,q_auto:best,w_640/v1643188363/gjcb1glncevi4muzegiu.jpg',
     ans:['Sakramen Perkawinan', 'Sakramen Tobat', 'Sakramen Krisma', 'Sakramen Pengurapan Orang Sakit'],
     correctans: 3
 },
+['Raja pertama Israel adalah..']:{
+    imgkeyword:['israel'],
+    ans: ['Daud', 'Saul', 'Yohannes', 'Musa'],
+    correctans:2
+}
 
 }
 export default mainquiz

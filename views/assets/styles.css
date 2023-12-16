@@ -12,3 +12,8 @@ html, body{
     visibility:collapse;
     display:none;
 }
+footer {
+    
+    border-color: blue;
+    border-width: 10px;
+}

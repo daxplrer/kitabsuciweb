@@ -1,6 +1,7 @@
 /** @param {HTMLButtonElement} el */
 var disabled = false
 var realans = '_'
+const commentator = document.querySelector('p#commentator')
 for (const [i, el] of document.querySelectorAll('button[ansbtn=""]').entries()){
     console.log(el)
     let realansbtn = false
@@ -16,6 +17,8 @@ for (const [i, el] of document.querySelectorAll('button[ansbtn=""]').entries()){
             const datarecEv = new Event('DXPL_ONDONECLICK')
             clickedthisbtn = true
             document.querySelectorAll('button[ansbtn=""]').forEach((el2)=>el2.dispatchEvent(datarecEv))
+            if (realansbtn) commentator.textContent = 'Yay, kamu benar 🥳🎉'
+            else commentator.textContent = 'Yahhh, kamu salah 😔. Gapapa coba lagi!'
             setTimeout(()=>{
                 location.replace('/quiz')
             }, 5000)

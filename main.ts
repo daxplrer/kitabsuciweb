@@ -8,22 +8,11 @@ import convertTo from './tools/convertTo.ts';
 import namespaceit from "./tools/namespaceit.ts";
 import listdoa from './views/private/kumpulandoa/doa.js'
 import nodecrypto from 'node:crypto'
+import shuffleArr from "./tools/shuffleArr.ts";
 import {type quiztype, mainquiz} from './views/private/quiz/popquiz.ts'
 const {dirname, filename, filepath} = generatePath(import.meta);
 async function run(){
-// const fileCache: { [key: string]: Uint8Array } = {};
-// async function getFile(entrypath: string): Promise<Uint8Array> {
-//     const textencode = new TextEncoder()
-//     if (typeof fileCache[entrypath] !== "undefined") return fileCache[entrypath];
-//     const file = await Deno.readFile(entrypath)
-//     const filestr = convertTo(file, 'utf-8')
-//     if (path.globToRegExp("**/*.e.js").test(entrypath)) {
-//       return textencode.encode(`${await eval(filestr)}`);
-//     } else {
-//       fileCache[entrypath] = file
-//       return file;
-//     }
-//   }
+// singko masingko patata
 const app = express()
 const viewdir = join(dirname, 'views')
 app.set('view engine', 'pug')
@@ -38,6 +27,7 @@ app.get('/styles.css/', async(_req,res)=>{
     // @ts-ignore: outdated types
     res.end(await Deno.readFile(join(viewdir, 'styles.css')))
 })
+app.get('/default.pug/', (_req, res)=>res.render(join(viewdir, 'default.pug')))
 app.get('/kumpulandoa/', (_req, res)=>res.render(join(viewdir, 'kumpulandoa.pug'), {pagenm:'prayerscollection', prayerscollection:Object.keys(listdoa)}))
 app.get('/kumpulandoa/:namadoa', (req, res)=>{
     const reqdoa = req.params.namadoa as keyof typeof listdoa
@@ -48,13 +38,21 @@ app.get('/kumpulandoa/:namadoa', (req, res)=>{
     const teksdoa = listdoa[reqdoa].split('\n')
     res.render(join(viewdir, 'doa2.pug'), {namadoa:reqdoa, teksdoa:teksdoa})
 })
-app.get('/quiz/', (_req, res)=>{
+const cookieprop = {
+    name: 'kitabsucidxpl_currentquest',
+    option: {
+        expires: new Date(Date.now()+1800000), httpOnly:true, secure:true
+    }
+}
+app.get('/quiz/', (req, res)=>{
 const questkeys = Object.keys(mainquiz)
 const selectlen = nodecrypto.randomInt(questkeys.length-1)
 const quest = mainquiz[questkeys[selectlen]]
 if (quest.correctans<1||quest.correctans>4) throw new Error()
 const imgres = Array.isArray(quest.imgkeyword)?`https://source.unsplash.com/random/300x300?${quest.imgkeyword.join(',')}`:quest.imgkeyword
-res.render(join(viewdir, 'quiz.pug'), {pagenm:'quiz', anslist:quest.ans, realans:quest.ans[quest.correctans-1], quizimg:imgres, quizquestion:questkeys[selectlen]})
+const anscorrect = quest.ans[quest.correctans-1]
+const shuffleans = (shuffleArr(quest.ans))
+res.render(join(viewdir, 'quiz.pug'), {pagenm:'quiz', anslist:shuffleans, realans:anscorrect, quizimg:imgres, quizquestion:questkeys[selectlen]})
 })
 app.listen(8000);
 }
