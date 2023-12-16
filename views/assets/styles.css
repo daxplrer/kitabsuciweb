@@ -12,8 +12,13 @@ html, body{
     visibility:collapse;
     display:none;
 }
-footer {
-    
-    border-color: blue;
-    border-width: 10px;
+i{
+    border-radius: 5px;
+    transition: all 0.5s ease-in-out;
+}
+i:hover {
+    background-color: white;
+    color:var(--bs-body-bg);
+    padding-right: 10px;
+    padding-left:10px
 }

@@ -3,7 +3,7 @@ block content
     #quest.justify-content-center
         h2 #{quizquestion}
         p#commentator Ayo, jawab dulu :]
-        img.mx-50(src=quizimg)
+        img.mx-50(draggable="false" style="user-select:none" src=quizimg)
 
     #ans.row.py-2
         each ans in anslist
