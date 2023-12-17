@@ -8,7 +8,6 @@ import convertTo from './tools/convertTo.ts';
 import namespaceit from "./tools/namespaceit.ts";
 import listdoa from './views/private/kumpulandoa/doa.js'
 import nodecrypto from 'node:crypto'
-import shuffleArr from "./tools/shuffleArr.ts";
 import {type quiztype, mainquiz} from './views/private/quiz/popquiz.ts'
 const {dirname, filename, filepath} = generatePath(import.meta);
 async function run(){
@@ -50,9 +49,7 @@ const selectlen = nodecrypto.randomInt(questkeys.length-1)
 const quest = mainquiz[questkeys[selectlen]]
 if (quest.correctans<1||quest.correctans>4) throw new Error()
 const imgres = Array.isArray(quest.imgkeyword)?`https://source.unsplash.com/random/300x300?${quest.imgkeyword.join(',')}`:quest.imgkeyword
-const anscorrect = quest.ans[quest.correctans-1]
-const shuffleans = (shuffleArr(quest.ans))
-res.render(join(viewdir, 'quiz.pug'), {pagenm:'quiz', anslist:shuffleans, realans:anscorrect, quizimg:imgres, quizquestion:questkeys[selectlen]})
+res.render(join(viewdir, 'quiz.pug'), {pagenm:'quiz', anslist:quest.ans, realans:quest.ans[quest.correctans-1], quizimg:imgres, quizquestion:questkeys[selectlen]})
 })
 app.listen(8000);
 }
