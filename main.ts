@@ -37,6 +37,7 @@ app.get('/kumpulandoa/:namadoa', (req, res)=>{
     const teksdoa = listdoa[reqdoa].split('\n')
     res.render(join(viewdir, 'doa2.pug'), {namadoa:reqdoa, teksdoa:teksdoa})
 })
+//tidak terpakai, akan dihapus nanti
 const cookieprop = {
     name: 'kitabsucidxpl_currentquest',
     option: {
